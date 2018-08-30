@@ -261,6 +261,10 @@
     <Compile Include="Migrations\201808301652215_ChangeTournamentIdToBeStringInsteadOfInt.Designer.cs">
       <DependentUpon>201808301652215_ChangeTournamentIdToBeStringInsteadOfInt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808301846535_ChangeIdFromGuidToString.cs" />
+    <Compile Include="Migrations\201808301846535_ChangeIdFromGuidToString.Designer.cs">
+      <DependentUpon>201808301846535_ChangeIdFromGuidToString.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -386,6 +390,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808301652215_ChangeTournamentIdToBeStringInsteadOfInt.resx">
       <DependentUpon>201808301652215_ChangeTournamentIdToBeStringInsteadOfInt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808301846535_ChangeIdFromGuidToString.resx">
+      <DependentUpon>201808301846535_ChangeIdFromGuidToString.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

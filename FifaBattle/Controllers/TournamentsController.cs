@@ -2,7 +2,9 @@
 using FifaBattle.Models;
 using FifaBattle.ViewModels;
 using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -57,13 +59,26 @@ namespace FifaBattle.Controllers
 				return View("TournamentForm", tournamentVM);
 			}
 
-			var tournament = new Tournament(tournamentVM.Name, tournamentVM.NumberOfPlayers, tournamentVM.TournamentTypeId, User.Identity.GetUserId());
-			_context.Tournaments.Add(tournament);
+			var tournament = new Tournament
+			{
+				Id = Guid.NewGuid().ToString(),
+				Players = new Collection<Player>(),
+				Name = tournamentVM.Name,
+				NumberOfPlayers = tournamentVM.NumberOfPlayers,
+				TournamentTypeId = tournamentVM.TournamentTypeId,
+				CreatorId = User.Identity.GetUserId(),
+				DateCreated = DateTime.Now
+			};
 
+			_context.Tournaments.Add(tournament);
 			_context.SaveChanges();
 
-			tournament.AddPlayers(tournamentVM.Players);
+			foreach (var player in tournamentVM.Players)
+			{
+				player.Id = Guid.NewGuid().ToString();
+			}
 
+			tournament.AddPlayers(tournamentVM.Players);
 			_context.SaveChanges();
 
 			//MatchesGenerator matchesGenerator = new MatchesGenerator(tournament.Id);
@@ -122,7 +137,7 @@ namespace FifaBattle.Controllers
 
 			foreach (var player in players)
 			{
-				if (string.IsNullOrEmpty(player.Id))
+				if (player.Id != null)
 				{
 					player.TournamentId = tournament.Id;
 

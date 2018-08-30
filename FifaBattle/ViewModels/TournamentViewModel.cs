@@ -24,12 +24,12 @@ namespace FifaBattle.ViewModels
 
 		public IList<Player> Players { get; set; }
 
-		//public string Action
-		//{
-		//	get
-		//	{
-		//		return Id == 0 ? "Create" : "Update";
-		//	}
-		//}
+		public string Action
+		{
+			get
+			{
+				return Id == null ? "Create" : "Update";
+			}
+		}
 	}
 }

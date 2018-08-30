@@ -1,7 +1,6 @@
 ﻿using FifaBattle.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,7 +8,7 @@ namespace FifaBattle.Core.Domain
 {
 	public class Tournament
 	{
-		public string Id { get; private set; }
+		public string Id { get; set; }
 
 		[Required]
 		public string Name { get; set; }
@@ -26,41 +25,41 @@ namespace FifaBattle.Core.Domain
 		[Display(Name = "Number Of Matches")]
 		public int NumberOfMatches { get; set; }
 
-		public DateTime DateCreated { get; private set; }
+		public DateTime DateCreated { get; set; }
 
-		public ApplicationUser Creator { get; private set; }
+		public ApplicationUser Creator { get; set; }
 
 		[Required]
-		public string CreatorId { get; private set; }
+		public string CreatorId { get; set; }
 
 		public ICollection<Player> Players { get; set; }
 
-		protected Tournament()
-		{
-		}
+		//protected Tournament()
+		//{
+		//}
 
-		public Tournament(string name, int numberOfPlayers, int tournamentTypeId, string userId)
-		{
-			if (name == null)
-				throw new ArgumentNullException("name");
+		//public Tournament(string name, int numberOfPlayers, int tournamentTypeId, string userId)
+		//{
+		//	if (name == null)
+		//		throw new ArgumentNullException("name");
 
-			if (numberOfPlayers == 0)
-				throw new ArgumentException("numberOfPlayers");
+		//	if (numberOfPlayers == 0)
+		//		throw new ArgumentException("numberOfPlayers");
 
-			if (tournamentTypeId == 0)
-				throw new ArgumentException("tournamentTypeId");
+		//	if (tournamentTypeId == 0)
+		//		throw new ArgumentException("tournamentTypeId");
 
-			if (userId == null)
-				throw new ArgumentNullException("userId");
+		//	if (userId == null)
+		//		throw new ArgumentNullException("userId");
 
-			Players = new Collection<Player>();
+		//	Players = new Collection<Player>();
 
-			Name = name;
-			NumberOfPlayers = numberOfPlayers;
-			TournamentTypeId = tournamentTypeId;
-			CreatorId = userId;
-			DateCreated = DateTime.Now;
-		}
+		//	Name = name;
+		//	NumberOfPlayers = numberOfPlayers;
+		//	TournamentTypeId = tournamentTypeId;
+		//	CreatorId = userId;
+		//	DateCreated = DateTime.Now;
+		//}
 
 		public void AddPlayers(ICollection<Player> players)
 		{
