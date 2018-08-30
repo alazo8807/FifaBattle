@@ -205,11 +205,11 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TournamentsController.cs" />
-    <Compile Include="Core\Domain\Match.cs" />
-    <Compile Include="Core\Domain\Player.cs" />
-    <Compile Include="Core\Domain\Team.cs" />
-    <Compile Include="Core\Domain\Tournament.cs" />
-    <Compile Include="Core\Domain\TournamentType.cs" />
+    <Compile Include="Core\Models\Match.cs" />
+    <Compile Include="Core\Models\Player.cs" />
+    <Compile Include="Core\Models\Team.cs" />
+    <Compile Include="Core\Models\Tournament.cs" />
+    <Compile Include="Core\Models\TournamentType.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -266,14 +266,14 @@
       <DependentUpon>201808301846535_ChangeIdFromGuidToString.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
-    <Compile Include="Models\ApplicationUser.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Core\Models\ApplicationUser.cs" />
+    <Compile Include="Core\ViewModels\AccountViewModel.cs" />
+    <Compile Include="Core\ViewModels\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MatchesGenerator.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\TournamentViewModel.cs" />
+    <Compile Include="Core\ViewModels\TournamentViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-lumen.css" />

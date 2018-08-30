@@ -1,4 +1,4 @@
-﻿using FifaBattle.Core.Domain;
+﻿using FifaBattle.Core.Models;
 using FifaBattle.Models;
 using System.Collections.Generic;
 using System.Data.Entity;

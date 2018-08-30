@@ -1,8 +1,8 @@
-﻿using FifaBattle.Core.Domain;
+﻿using FifaBattle.Core.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace FifaBattle.ViewModels
+namespace FifaBattle.Core.ViewModels
 {
 	public class TournamentViewModel
 	{

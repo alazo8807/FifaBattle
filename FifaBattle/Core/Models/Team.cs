@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FifaBattle.Core.Domain
+namespace FifaBattle.Core.Models
 {
 	public class Team
 	{

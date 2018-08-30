@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FifaBattle.Core.ViewModels;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -6,7 +7,6 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using FifaBattle.Models;
 
 namespace FifaBattle.Controllers
 {
@@ -65,7 +65,7 @@ namespace FifaBattle.Controllers
 
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
-            {
+			{
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
@@ -293,7 +293,7 @@ namespace FifaBattle.Controllers
             var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
             ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
             return View(new ManageLoginsViewModel
-            {
+			{
                 CurrentLogins = userLogins,
                 OtherLogins = otherLogins
             });

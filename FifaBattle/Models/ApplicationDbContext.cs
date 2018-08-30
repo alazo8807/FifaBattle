@@ -1,5 +1,5 @@
 ﻿using System.Data.Entity;
-using FifaBattle.Core.Domain;
+using FifaBattle.Core.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace FifaBattle.Models

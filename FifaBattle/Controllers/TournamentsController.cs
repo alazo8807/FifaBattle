@@ -1,6 +1,6 @@
-﻿using FifaBattle.Core.Domain;
+﻿using FifaBattle.Core.Models;
+using FifaBattle.Core.ViewModels;
 using FifaBattle.Models;
-using FifaBattle.ViewModels;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -137,7 +137,7 @@ namespace FifaBattle.Controllers
 
 			foreach (var player in players)
 			{
-				if (player.Id != null)
+				if (player.Id == null)
 				{
 					player.TournamentId = tournament.Id;
 

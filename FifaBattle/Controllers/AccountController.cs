@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FifaBattle.Core.Models;
+using FifaBattle.Core.ViewModels;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -8,7 +10,6 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using FifaBattle.Models;
 
 namespace FifaBattle.Controllers
 {
