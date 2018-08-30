@@ -1,0 +1,189 @@
+﻿@model FifaBattle.ViewModels.TournamentViewModel
+
+@{
+	ViewBag.Title = Model.Title;
+}
+
+<h2>@Model.Title</h2>
+@using (Html.BeginForm(Model.Action, "Tournaments"))
+{
+	@Html.ValidationSummary(true, "Please fix the following errors.")
+
+	<div class="form-group">
+		@Html.LabelFor(m => m.Name)
+		@Html.TextBoxFor(m => m.Name, new { @class = "form-control", autofocus = "autofocus" })
+		@Html.ValidationMessageFor(m => m.Name)
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(m => m.TournamentTypeId)
+		@Html.DropDownListFor(m => m.TournamentTypeId, new SelectList(Model.TournamentTypes, "Id", "Name"), "Select Tournament Type", new { @class = "form-control" })
+		@Html.ValidationMessageFor(m => m.TournamentTypeId)
+	</div>
+
+	<div class="form-group">
+		@Html.LabelFor(m => m.NumberOfPlayers)
+		<br>
+		<span class="input-number-decrement">–</span>@Html.TextBoxFor(m => m.NumberOfPlayers, new { @id = "nbrPlayersInput", @class = "input-number", @Value = Model.Players.Count, @min = 2, @max = 30 })<span class="input-number-increment">+</span>
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(m => m.NumberOfPlayers)
+		<br>
+		<span class="input-number-decrement">–</span>@Html.TextBoxFor(m => m.NumberOfPlayers, new { @id = "nbrPlayersInput", @class = "input-number", @Value = Model.Players.Count, @min = 2, @max = 30 })<span class="input-number-increment">+</span>
+	</div>
+
+	<div class="row Player-Teams-Container">
+		@for (int i = 0; i < Model.Players.Count; i++)
+		{
+			<div class="col-sm-3 Panel-Wrapper">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="form-group">
+							@Html.TextBoxFor(m => m.Players[i].Name, new { @class = "form-control", placeholder = "Player" })
+							@Html.HiddenFor(m => m.Players[i].Id)
+							@Html.ValidationMessageFor(m => m.Players[i].Team.Name)
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							@Html.TextBoxFor(m => m.Players[i].Team.Name, new { @class = "form-control", placeholder = "Team" })
+							@Html.HiddenFor(m => m.Players[i].Team.Id)
+							@Html.ValidationMessageFor(m => m.Players[i].Team.Name)
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+
+	@Html.HiddenFor(m => m.Id)
+	@*@Html.AntiForgeryToken()*@
+	<button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section scripts
+{
+	@Scripts.Render("~/bundles/jqueryval")
+
+	<script type="text/x-template" id="Player-Team-Template">
+		<div class='col-sm-3 Panel-Wrapper'>
+			<div class='panel panel-default'>
+				<div class='panel-heading'>
+					<div class='form-group'>
+						<input class='form-control' data-val='true' data-val-length='The field Name must be a string with a maximum length of 50.' data-val-length-max='50' id='Players_<%= value %>__Name' name='Players[<%= value %>].Name' type='text' , placeholder="Player">
+						<input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Players_<%= value %>__Id" name="Players[<%= value %>].Id" type="hidden" value=0>
+					</div>
+				</div>
+				<div class='panel-body'>
+					<div class='form-group'>
+						<input class='form-control' data-val='true' data-val-length='The field Name must be a string with a maximum length of 50.' data-val-length-max='50' id='Players_<%= value %>__Team_Name' name='Players[<%= value %>].Team.Name' type='text' , placeholder="Team">
+						<input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Players_<%= value %>__Team_Id" name="Players[<%= value %>].Team.Id" type="hidden" value=0>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
+
+	<script>
+		$(document).ready(function () {
+		});
+
+		(function () {
+			window.inputNumber = function (el, increaseCallback, decreaseCallback) {
+
+				var min = el.attr('min') || false;
+				var max = el.attr('max') || false;
+
+				var els = {};
+
+				els.dec = el.prev();
+				els.inc = el.next();
+
+				el.each(function () {
+					init($(this));
+				});
+
+				function init(el) {
+
+					els.dec.on('click', decrement);
+					els.inc.on('click', increment);
+
+					function decrement() {
+						var value = el[0].value;
+						value--;
+						if (!min || value >= min) {
+							el[0].value = value;
+							decreaseCallback(value);
+						}
+					}
+
+					function increment() {
+						var value = el[0].value;
+						value++;
+						if (!max || value <= max) {
+							el[0].value = value;
+							increaseCallback(value);
+						}
+					}
+				}
+			}
+		})();
+
+		function addPlayer(value) {
+			$(".Player-Teams-Container").append(function () {
+				var compiled = _.template($("#Player-Team-Template").html());
+				var html = compiled({ value: value - 1 });
+				return html;
+			});
+		}
+
+		function removePlayer(value) {
+			var playerSelector = "#Players_" + (value) + "__Id";
+			var playerId = $(playerSelector).attr("value");
+			var lastPlayer = $(".Player-Teams-Container .Panel-Wrapper").last();
+
+			if (playerId == 0) {
+				lastPlayer.remove();
+				return;
+			}
+
+			$.ajax({
+				url: "/api/players/" + playerId,
+				method: "DELETE"
+			})
+			.done(function () {
+				lastPlayer.remove();
+			})
+			.fail(function () {
+				var dialog = bootbox.dialog({
+					title: 'Error',
+					message: "<p>Sorry but something went wrong. We were unable to delete this Player.</p>",
+					buttons: {
+						ok: {
+							label: "Ok",
+							className: 'btn-warning'
+						}
+					}
+				});
+			});
+		}
+
+		function addTeam(value) {
+			$('.player-teams-wrapper').each(function () {
+				var newTeam = `<div class='form-group team-form'>
+																<input class='form-control' type='text' placeholder='Team' name='players[0][teams][0]' required='true'>
+															  </div>`;
+
+				$(this).append(newTeam);
+			})
+		}
+
+		function removeTeam() {
+			$('.player-teams-wrapper').each(function () {
+				$(this).children().last().remove();
+			})
+		}
+
+		inputNumber($('#nbrPlayersInput'), addPlayer, removePlayer);
+		inputNumber($('#nbrMatchesInput'), addTeam, removeTeam);
+	</script>
+}

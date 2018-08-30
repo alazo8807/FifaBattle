@@ -1,0 +1,87 @@
+﻿@model IEnumerable<FifaBattle.Core.Domain.Tournament>
+
+@{
+	ViewBag.Title = "Index";
+}
+
+<div class="container">
+	<div class="row">
+		<h2>Index</h2>
+	</div>
+	<div class="row">
+		@foreach (var tournament in Model)
+		{
+			<div class="tournament-panel-wrapper col-sm-3">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">@Html.ActionLink(tournament.Name, "Edit", "Tournaments", new { id = tournament.Id }, null) </h3>
+					</div>
+					<div class="panel-body">
+						<p><strong>@tournament.TournamentType.Name</strong></p>
+						<p class="card-text">Players: @tournament.NumberOfPlayers</p>
+						<p class="card-text">Rounds: @tournament.NumberOfMatches</p>
+						<p>Created on @tournament.DateCreated.ToShortDateString() at  @tournament.DateCreated.ToShortTimeString()</p>
+						<div class="card-btns">
+							@Html.ActionLink("Clone", "Clone", new { id = tournament.Id }, new { @class = "btn btn-default btn-xs" })
+							@*<form action="/tournaments/@tournament.Id" method="POST">
+									<button class="btn btn-outline-success btn-sm">Clone</button>
+								</form>*@
+							<button data-tournament-id=@tournament.Id class="btn btn-danger btn-xs js-delete-tournament">Delete</button>
+							@*@Html.ActionLink("Delete", "Delete", new { id = tournament.Id }, new { @class = "btn btn-danger btn-xs" })*@
+							@*<form action="/tournaments/@tournament.Id" method="DELETE">
+									<button class="btn btn-outline-danger btn-sm">Delete</button>
+								</form>*@
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+@section scripts
+{
+	<script>
+		$(document).ready(function () {
+			$(".js-delete-tournament").on("click", function () {
+				var button = $(this);
+
+				bootbox.confirm({
+					message: "Are you sure you want to delete tournament?",
+					buttons: {
+						confirm: {
+							label: 'Yes',
+							className: 'btn-danger'
+						},
+						cancel: {
+							label: 'No'
+						}
+					},
+					callback: function (result) {
+						if (result) {
+							$.ajax({
+								url: "api/tournaments/" + button.attr("data-tournament-id"),
+								method: "DELETE"
+							})
+							.done(function () {
+								button.parents(".tournament-panel-wrapper").fadeOut(() => remove());
+							})
+							.fail(function () {
+								var dialog = bootbox.dialog({
+									title: 'Error',
+									message: "<p>Sorry but something went wrong. We were unable to delete this Tournament.</p>",
+									buttons: {
+										ok: {
+											label: "Ok",
+											className: 'btn-warning'
+										}
+									}
+								});
+							});
+						}
+					}
+				});
+			});
+		});
+	</script>
+}

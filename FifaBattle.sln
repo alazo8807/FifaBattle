@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FifaBattle", "FifaBattle\FifaBattle.csproj", "{1B0651D8-9C2E-48DE-8D51-FEF22C5030A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FifaBattle.Tests", "FifaBattle.Tests\FifaBattle.Tests.csproj", "{12ABFC77-2EB9-491D-9AFF-152559CFC22C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B0651D8-9C2E-48DE-8D51-FEF22C5030A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B0651D8-9C2E-48DE-8D51-FEF22C5030A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B0651D8-9C2E-48DE-8D51-FEF22C5030A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B0651D8-9C2E-48DE-8D51-FEF22C5030A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12ABFC77-2EB9-491D-9AFF-152559CFC22C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12ABFC77-2EB9-491D-9AFF-152559CFC22C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12ABFC77-2EB9-491D-9AFF-152559CFC22C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12ABFC77-2EB9-491D-9AFF-152559CFC22C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3AE9C9FD-4F1A-4992-8BBF-402D5DDE690D}
+	EndGlobalSection
+EndGlobal

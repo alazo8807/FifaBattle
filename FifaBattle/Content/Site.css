@@ -1,0 +1,88 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.field-validation-error span {
+	color: red;
+}
+
+.input-validation-error {
+	border: 2px solid red;
+}
+
+.tournament-panel-wrapper {
+	padding-left: 0;
+}
+
+h3.panel-title {
+	font-weight: 700;
+}
+
+.btn:focus {
+	outline: none;
+}
+
+/*---------------*/
+/*Input nbr*/
+/*---------------*/
+.input-number {
+	width: 80px;
+	padding: 0 12px;
+	vertical-align: top;
+	text-align: center;
+	outline: none;
+}
+
+.input-number,
+.input-number-decrement,
+.input-number-increment {
+	border: 1px solid #ccc;
+	height: 40px;
+	user-select: none;
+	-webkit-user-select: none; /* Chrome/Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+}
+
+.input-number-decrement,
+.input-number-increment {
+	display: inline-block;
+	width: 30px;
+	line-height: 38px;
+	background: #f1f1f1;
+	color: #444;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.input-number-decrement {
+	border-right: none;
+	border-radius: 4px 0 0 4px;
+}
+
+.input-number-increment {
+	border-left: none;
+	border-radius: 0 4px 4px 0;
+}
