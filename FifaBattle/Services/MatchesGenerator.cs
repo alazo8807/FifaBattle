@@ -1,8 +1,6 @@
 ﻿using FifaBattle.Core.Models;
 using FifaBattle.Models;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 
 namespace FifaBattle.Services
 {
@@ -24,27 +22,27 @@ namespace FifaBattle.Services
 
 			//_tournamentId = TournamentId;
 
-			_players = _context.Players
-				.Include(p => p.Team)
-				.Where(p => p.TournamentId == TournamentId)
-				.ToList();
+			//_players = _context.Players
+			//	.Include(p => p.Team)
+			//	.Where(p => p.TournamentId == TournamentId)
+			//	.ToList();
 		}
 
 		public void Generate()
 		{
-			var playersCount = _players.Count;
+			//var playersCount = _players.Count;
 
-			for (int i = 0; i < playersCount; i++)
-			{
-				for (int j = i + 1; j < playersCount; j++)
-				{
-					var homeTeamId = _players[i].Team.Id;
+			//for (int i = 0; i < playersCount; i++)
+			//{
+			//	for (int j = i + 1; j < playersCount; j++)
+			//	{
+			//		var homeTeamId = _players[i].Team.Id;
 
-					var awayTeamId = _players[j].Team.Id;
+			//		var awayTeamId = _players[j].Team.Id;
 
-					CreateMatch(homeTeamId, awayTeamId);
-				}
-			}
+			//		CreateMatch(homeTeamId, awayTeamId);
+			//	}
+			//}
 		}
 
 		//Adding a comment agains

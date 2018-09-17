@@ -64,7 +64,7 @@
 								method: "DELETE"
 							})
 							.done(function () {
-								button.parents(".tournament-panel-wrapper").fadeOut(() => remove());
+								button.parents(".tournament-panel-wrapper").fadeOut(/*() => remove()*/);
 							})
 							.fail(function () {
 								var dialog = bootbox.dialog({

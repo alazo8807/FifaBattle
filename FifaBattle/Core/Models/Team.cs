@@ -4,6 +4,7 @@ namespace FifaBattle.Core.Models
 {
 	public class Team
 	{
+		[Key]
 		public int Id { get; set; }
 
 		[Required]

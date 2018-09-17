@@ -5,6 +5,7 @@ namespace FifaBattle.Core.Models
 {
 	public class Player
 	{
+		[Key]
 		public string Id { get; set; }
 
 		[Required]
@@ -13,10 +14,12 @@ namespace FifaBattle.Core.Models
 
 		[ForeignKey("Team")]
 		public int TeamId { get; set; }
+
 		public Team Team { get; set; }
 
 		[ForeignKey("Tournament")]
 		public string TournamentId { get; set; }
+
 		public Tournament Tournament { get; set; }
 	}
 }

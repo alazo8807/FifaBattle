@@ -1,8 +1,6 @@
-﻿using FifaBattle.Models;
-using Microsoft.AspNet.Identity;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
+﻿using FifaBattle.Core;
+using FifaBattle.Models;
+using FifaBattle.Persistance;
 using System.Web.Http;
 
 namespace FifaBattle.Controllers.Api
@@ -10,39 +8,31 @@ namespace FifaBattle.Controllers.Api
 	public class TournamentsController : ApiController
 	{
 		private ApplicationDbContext _context;
+		private IUnitOfWork _unitOfWork;
 
 		public TournamentsController()
 		{
 			_context = new ApplicationDbContext();
+			_unitOfWork = new UnitOfWork(_context);
 		}
 
 		// DELETE api/<controller>/5
 		[HttpDelete]
 		public IHttpActionResult DeleteTournament(string id)
 		{
-			var userId = User.Identity.GetUserId();
+			//var userId = User.Identity.GetUserId();
+			var userId = "3f310a65-509d-43a2-8714-c7626992c3d8";
 
-			var tournamentInDb = _context.Tournaments
-				.Include(t => t.Players)
-				.SingleOrDefault(c => c.Id == id && c.CreatorId == userId);
+			var tournamentInDb = _unitOfWork.Tournaments.GetTournamentWithAll(id);
 
 			if (tournamentInDb == null)
-				throw new HttpResponseException(HttpStatusCode.NotFound);
+				return NotFound();
 
-			var teamIds = tournamentInDb.Players.Select(p => p.TeamId).ToList();
+			if (tournamentInDb.CreatorId != userId)
+				return Unauthorized();
 
-			_context.Tournaments.Remove(tournamentInDb);
-			_context.SaveChanges();
-
-			foreach (var teamId in teamIds)
-			{
-				var team = _context.Teams.SingleOrDefault(t => t.Id == teamId);
-
-				if (team != null)
-					_context.Teams.Remove(team);
-			}
-
-			_context.SaveChanges();
+			_unitOfWork.Tournaments.Remove(tournamentInDb);
+			_unitOfWork.Commit();
 
 			return Ok();
 		}

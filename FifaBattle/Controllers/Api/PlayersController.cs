@@ -1,7 +1,5 @@
 ﻿using FifaBattle.Models;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Web.Http;
 
 namespace FifaBattle.Controllers.Api
@@ -42,20 +40,20 @@ namespace FifaBattle.Controllers.Api
 		{
 		}
 
-		// DELETE api/<controller>/5
-		public IHttpActionResult Delete(string id)
-		{
-			var playerInDb = _context.Players.Include(p => p.Team).SingleOrDefault(c => c.Id == id);
+		//// DELETE api/<controller>/5
+		//public IHttpActionResult Delete(string id)
+		//{
+		//	var playerInDb = _context.Players.Include(p => p.Team).SingleOrDefault(c => c.Id == id);
 
-			if (playerInDb == null)
-				return NotFound();
+		//	if (playerInDb == null)
+		//		return NotFound();
 
-			//TODO: Remove Teams for this player.
+		//	//TODO: Remove Teams for this player.
 
-			_context.Players.Remove(playerInDb);
-			_context.SaveChanges();
+		//	_context.Players.Remove(playerInDb);
+		//	_context.SaveChanges();
 
-			return Ok();
-		}
+		//	return Ok();
+		//}
 	}
 }

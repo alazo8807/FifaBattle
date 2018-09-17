@@ -1,10 +1,9 @@
-﻿using FifaBattle.Core.Models;
+﻿using FifaBattle.Core;
+using FifaBattle.Core.Models;
 using FifaBattle.Core.ViewModels;
 using FifaBattle.Models;
-using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -13,10 +12,12 @@ namespace FifaBattle.Controllers
 {
 	public class TournamentsController : Controller
 	{
+		private IUnitOfWork _unitWork;
 		private ApplicationDbContext _context;
 
-		public TournamentsController()
+		public TournamentsController(IUnitOfWork unitOfWork)
 		{
+			_unitWork = unitOfWork;
 			_context = new ApplicationDbContext();
 		}
 
@@ -28,7 +29,7 @@ namespace FifaBattle.Controllers
 		// GET: Tournaments
 		public ActionResult Index()
 		{
-			var tournaments = _context.Tournaments.Include(t => t.TournamentType).ToList();
+			var tournaments = _unitWork.Tournaments.GetTournamentsWithTournamentType();
 			return View(tournaments);
 		}
 
@@ -41,8 +42,8 @@ namespace FifaBattle.Controllers
 				TournamentTypes = _context.TournamentType.ToList(),
 				Players = new List<Player>
 				{
-					new Player { Team = new Team() },
-					new Player { Team = new Team() }
+					new Player (),
+					new Player ()
 				}
 			};
 
@@ -62,23 +63,23 @@ namespace FifaBattle.Controllers
 			var tournament = new Tournament
 			{
 				Id = Guid.NewGuid().ToString(),
-				Players = new Collection<Player>(),
+				Players = new List<Player>(),
 				Name = tournamentVM.Name,
 				NumberOfPlayers = tournamentVM.NumberOfPlayers,
 				TournamentTypeId = tournamentVM.TournamentTypeId,
-				CreatorId = User.Identity.GetUserId(),
+				CreatorId = "3f310a65-509d-43a2-8714-c7626992c3d8",//User.Identity.GetUserId(),
 				DateCreated = DateTime.Now
 			};
 
 			_context.Tournaments.Add(tournament);
-			_context.SaveChanges();
 
 			foreach (var player in tournamentVM.Players)
 			{
 				player.Id = Guid.NewGuid().ToString();
+				player.TournamentId = tournament.Id;
+				_context.Players.Add(player);
 			}
 
-			tournament.AddPlayers(tournamentVM.Players);
 			_context.SaveChanges();
 
 			//MatchesGenerator matchesGenerator = new MatchesGenerator(tournament.Id);
@@ -90,14 +91,19 @@ namespace FifaBattle.Controllers
 		//Tournaments/Edit/Id
 		public ActionResult Edit(string Id)
 		{
-			var userId = User.Identity.GetUserId();
+			//var userId = User.Identity.GetUserId();
+			var userId = "3f310a65-509d-43a2-8714-c7626992c3d8";
 
-			var tournamentInDb = _context.Tournaments.Single(t => t.Id == Id && t.CreatorId == userId);
+			//var tournamentInDb = _context.Tournaments.Single(t => t.Id == Id && t.CreatorId == userId);
+			var tournamentInDb = _unitWork.Tournaments.GetTournamentWithAll(Id);
 
 			if (tournamentInDb == null)
 				return HttpNotFound();
 
-			var playersInDb = _context.Players.Where(p => p.TournamentId == tournamentInDb.Id).Include(c => c.Team).ToList();
+			if (tournamentInDb.CreatorId != userId)
+				return new HttpUnauthorizedResult();
+
+			//var playersInDb = _context.Players.Where(p => p.TournamentId == tournamentInDb.Id).Include(c => c.Team).ToList();
 
 			var viewModel = new TournamentViewModel
 			{
@@ -106,81 +112,91 @@ namespace FifaBattle.Controllers
 				Name = tournamentInDb.Name,
 				NumberOfPlayers = tournamentInDb.NumberOfPlayers,
 				TournamentTypeId = tournamentInDb.TournamentTypeId,
-				TournamentTypes = _context.TournamentType.ToList(),
-				Players = playersInDb
+				TournamentTypes = _unitWork.TournamentTypes.GetAll(),
+				Players = tournamentInDb.Players
 			};
 
 			return View("TournamentForm", viewModel);
 		}
 
 		[HttpPost]
-		public ActionResult Update(TournamentViewModel TournamentViewModel)
+		public ActionResult Update(TournamentViewModel tournamentViewModel)
 		{
 			if (!ModelState.IsValid)
 			{
-				TournamentViewModel.Title = "Create Tournament";
-				TournamentViewModel.TournamentTypes = _context.TournamentType.ToList();
-				return View("TournamentForm", TournamentViewModel);
+				tournamentViewModel.Title = "Create Tournament";
+				tournamentViewModel.TournamentTypes = _unitWork.TournamentTypes.GetAll();
+				return View("TournamentForm", tournamentViewModel);
 			}
 
-			var userId = User.Identity.GetUserId();
+			//var userId = User.Identity.GetUserId();
+			var userId = "3f310a65-509d-43a2-8714-c7626992c3d8";
 
-			var players = TournamentViewModel.Players;
+			var tournament = _unitWork.Tournaments.GetTournamentWithAll(tournamentViewModel.Id);
 
-			var tournament = _context.Tournaments.Single(t => t.Id == TournamentViewModel.Id && t.CreatorId == userId);
+			if (tournament.Id == null)
+				return HttpNotFound();
 
-			tournament.Name = TournamentViewModel.Name;
-			tournament.NumberOfPlayers = TournamentViewModel.NumberOfPlayers;
-			tournament.TournamentTypeId = TournamentViewModel.TournamentTypeId;
+			if (tournament.CreatorId != userId)
+				return new HttpUnauthorizedResult();
 
-			_context.SaveChanges();
+			tournament.Name = tournamentViewModel.Name;
+			tournament.NumberOfPlayers = tournamentViewModel.NumberOfPlayers;
+			tournament.TournamentTypeId = tournamentViewModel.TournamentTypeId;
 
-			foreach (var player in players)
+			_context.Entry(tournament).State = System.Data.Entity.EntityState.Modified;
+
+			foreach (var player in tournamentViewModel.Players)
 			{
-				if (player.Id == null)
+				if (player.Id == null || player.Id == "0")
 				{
+					player.Id = Guid.NewGuid().ToString();
 					player.TournamentId = tournament.Id;
-
 					_context.Players.Add(player);
 				}
 				else
 				{
-					var playerInDb = _context.Players.Find(player.Id);
+					var playerInDb = _context.Players.Include(p => p.Team).Single(p => p.Id == player.Id);
 					playerInDb.Name = player.Name;
-
-					var teamInDb = _context.Teams.Find(player.Team.Id);
-					teamInDb.Name = player.Team.Name;
-
-					playerInDb.TeamId = teamInDb.Id;
+					playerInDb.Team.Name = player.Team.Name;
 				}
 			}
 
-			_context.SaveChanges();
+			var result = _context.SaveChanges();
 
 			return RedirectToAction("Index");
 		}
 		//Tournaments/Delete/Id
 		public ActionResult Delete(string id)
 		{
-			var userId = User.Identity.GetUserId();
+			//var userId = User.Identity.GetUserId();
+			var userId = "3f310a65-509d-43a2-8714-c7626992c3d8";
 
-			var tournamentInDb = _context.Tournaments.Single(t => t.Id == id && t.CreatorId == userId);
+			//var tournamentInDb = _context.Tournaments.Single(t => t.Id == id && t.CreatorId == userId);
+			var tournamentInDb = _unitWork.Tournaments.Get(id);
 
 			if (tournamentInDb == null)
 				return HttpNotFound();
 
-			var playersInDb = _context.Players.Include(p => p.Team).Where(p => p.TournamentId == tournamentInDb.Id).ToList();
+			if (tournamentInDb.CreatorId != userId)
+				return new HttpUnauthorizedResult();
 
-			foreach (var player in playersInDb)
-			{
-				var teamInDb = _context.Teams.Find(player.Team.Id);
+			_context.Tournaments.Remove(tournamentInDb);
+			_context.SaveChanges();
 
-				if (teamInDb != null)
-				{
-					_context.Teams.Remove(teamInDb);
-				}
-				_context.SaveChanges();
-			}
+			//var playersInDb = _context.Players.Include(p => p.Team).Where(p => p.TournamentId == tournamentInDb.Id).ToList();
+
+			//foreach (var player in playersInDb)
+			//{
+			//	var teamInDb = _context.Teams.Find(player.Team.Id);
+
+			//	if (teamInDb != null)
+			//	{
+			//		_context.Teams.Remove(teamInDb);
+			//	}
+			//	_context.SaveChanges();
+			//}
+
 			_context.Tournaments.Remove(tournamentInDb);
 			_context.SaveChanges();
 

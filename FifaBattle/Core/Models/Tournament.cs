@@ -7,6 +7,7 @@ namespace FifaBattle.Core.Models
 {
 	public class Tournament
 	{
+		[Key]
 		public string Id { get; set; }
 
 		[Required]
@@ -31,46 +32,6 @@ namespace FifaBattle.Core.Models
 		[Required]
 		public string CreatorId { get; set; }
 
-		public ICollection<Player> Players { get; set; }
-
-		//protected Tournament()
-		//{
-		//}
-
-		//public Tournament(string name, int numberOfPlayers, int tournamentTypeId, string userId)
-		//{
-		//	if (name == null)
-		//		throw new ArgumentNullException("name");
-
-		//	if (numberOfPlayers == 0)
-		//		throw new ArgumentException("numberOfPlayers");
-
-		//	if (tournamentTypeId == 0)
-		//		throw new ArgumentException("tournamentTypeId");
-
-		//	if (userId == null)
-		//		throw new ArgumentNullException("userId");
-
-		//	Players = new Collection<Player>();
-
-		//	Name = name;
-		//	NumberOfPlayers = numberOfPlayers;
-		//	TournamentTypeId = tournamentTypeId;
-		//	CreatorId = userId;
-		//	DateCreated = DateTime.Now;
-		//}
-
-		public void AddPlayers(ICollection<Player> players)
-		{
-			if (players == null)
-				throw new ArgumentNullException("players");
-
-			foreach (var player in players)
-			{
-				player.TournamentId = Id;
-
-				Players.Add(player);
-			}
-		}
+		public List<Player> Players { get; set; }
 	}
 }
