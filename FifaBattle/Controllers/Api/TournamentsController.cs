@@ -1,6 +1,5 @@
 ﻿using FifaBattle.Core;
 using FifaBattle.Models;
-using FifaBattle.Persistance;
 using System.Web.Http;
 
 namespace FifaBattle.Controllers.Api
@@ -8,12 +7,12 @@ namespace FifaBattle.Controllers.Api
 	public class TournamentsController : ApiController
 	{
 		private ApplicationDbContext _context;
-		private IUnitOfWork _unitOfWork;
+		private readonly IUnitOfWork _unitOfWork;
 
-		public TournamentsController()
+		public TournamentsController(IUnitOfWork unitOfWork)
 		{
 			_context = new ApplicationDbContext();
-			_unitOfWork = new UnitOfWork(_context);
+			_unitOfWork = unitOfWork;
 		}
 
 		// DELETE api/<controller>/5
