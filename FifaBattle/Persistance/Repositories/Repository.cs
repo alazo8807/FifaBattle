@@ -1,7 +1,9 @@
 ﻿using FifaBattle.Core.Repository;
 using FifaBattle.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace FifaBattle.Persistance.Repositories
 {
@@ -22,6 +24,11 @@ namespace FifaBattle.Persistance.Repositories
 		public IEnumerable<T> GetAll()
 		{
 			return _context.Set<T>().ToList();
+		}
+
+		public IEnumerable<T> Find(Expression<Func<T, bool>> criteria)
+		{
+			return _context.Set<T>().Where(criteria).ToList();
 		}
 
 		public void Add(T entity)

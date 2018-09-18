@@ -5,6 +5,7 @@ namespace FifaBattle.Core
 {
 	public interface IUnitOfWork
 	{
+		IRepository<Match> Matches { get; set; }
 		IRepository<Team> Teams { get; set; }
 
 		void Dispose();

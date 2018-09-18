@@ -118,6 +118,37 @@ namespace FifaBattle.Controllers
 			return View("TournamentForm", viewModel);
 		}
 
+		//Tournaments/Details/Id
+		public ActionResult Details(string id)
+		{
+			//var userId = User.Identity.GetUserId();
+			var userId = "3f310a65-509d-43a2-8714-c7626992c3d8";
+
+			//var tournamentInDb = _context.Tournaments.Single(t => t.Id == Id && t.CreatorId == userId);
+			var tournamentInDb = _unitOfWork.Tournaments.GetTournamentWithAll(id);
+
+			if (tournamentInDb == null)
+				return HttpNotFound();
+
+			if (tournamentInDb.CreatorId != userId)
+				return new HttpUnauthorizedResult();
+
+			//var playersInDb = _context.Players.Where(p => p.TournamentId == tournamentInDb.Id).Include(c => c.Team).ToList();
+
+			var viewModel = new TournamentDetailsViewModel
+			{
+				Title = "Edit Tournament",
+				Id = tournamentInDb.Id,
+				Name = tournamentInDb.Name,
+				NumberOfPlayers = tournamentInDb.NumberOfPlayers,
+				TournamentTypeId = tournamentInDb.TournamentTypeId,
+				TournamentTypes = _unitOfWork.TournamentTypes.GetAll(),
+				Matches = _unitOfWork.Matches.Find(m => m.TournamentId == id)
+			};
+
+			return View("Details", viewModel);
+		}
+
 		[HttpPost]
 		public ActionResult Update(TournamentViewModel tournamentViewModel)
 		{

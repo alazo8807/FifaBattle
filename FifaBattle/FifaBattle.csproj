@@ -235,6 +235,7 @@
     <Compile Include="Core\Models\TournamentType.cs" />
     <Compile Include="Core\Repository\IRepository.cs" />
     <Compile Include="Core\Repository\ITournamentsRepository.cs" />
+    <Compile Include="Core\ViewModels\TournamentDetailsViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -337,6 +338,7 @@
     </Content>
     <Content Include="Scripts\underscore-min.js" />
     <Content Include="Web.config" />
+    <Content Include="Views\Tournaments\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

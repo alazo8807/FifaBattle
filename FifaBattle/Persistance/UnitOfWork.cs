@@ -17,12 +17,14 @@ namespace FifaBattle.Persistance
 			Players = new PlayersRepository(_context);
 			TournamentTypes = new Repository<TournamentType>(_context);
 			Teams = new Repository<Team>(_context);
+			Matches = new Repository<Match>(_context);
 		}
 
 		public ITournamentsRepository Tournaments { get; set; }
 		public IPlayersRepository Players { get; set; }
 		public IRepository<TournamentType> TournamentTypes { get; set; }
 		public IRepository<Team> Teams { get; set; }
+		public IRepository<Match> Matches { get; set; }
 
 		public int Commit()
 		{
