@@ -137,7 +137,7 @@ namespace FifaBattle.Controllers
 
 			var viewModel = new TournamentDetailsViewModel
 			{
-				Title = "Edit Tournament",
+				Title = "Tournament Details",
 				Id = tournamentInDb.Id,
 				Name = tournamentInDb.Name,
 				NumberOfPlayers = tournamentInDb.NumberOfPlayers,

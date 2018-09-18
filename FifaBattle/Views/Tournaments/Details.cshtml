@@ -1,7 +1,79 @@
-﻿
+﻿@model FifaBattle.Core.ViewModels.TournamentDetailsViewModel
 @{
-    ViewBag.Title = "Details";
+	ViewBag.Title = Model.Title;
 }
+<h2>@Model.Title</h2>
+@using (Html.BeginForm(Model.Action, "Tournaments"))
+{
+	@Html.ValidationSummary(true, "Please fix the following errors.")
 
-<h2>Details</h2>
+	<div class="form-group">
+		@Html.LabelFor(m => m.Name)
+		@Html.TextBoxFor(m => m.Name, new { @class = "form-control", autofocus = "autofocus" })
+		@Html.ValidationMessageFor(m => m.Name)
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(m => m.TournamentTypeId)
+		@Html.DropDownListFor(m => m.TournamentTypeId, new SelectList(Model.TournamentTypes, "Id", "Name"), "Select Tournament Type", new { @class = "form-control" })
+		@Html.ValidationMessageFor(m => m.TournamentTypeId)
+	</div>
 
+	<div class="row Player-Teams-Container">
+		@foreach (var match in Model.Matches)
+		{
+			<p>Match @match.HomeTeamId vs @match.AwayTeamId</p>
+		}
+
+
+					
+			@*<div class="col-sm-3 Panel-Wrapper">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="form-group">
+							@Html.TextBoxFor(m => m.Players[i].Name, new { @class = "form-control", placeholder = "Player" })
+							@Html.HiddenFor(m => m.Players[i].Id)
+							@Html.ValidationMessageFor(m => m.Players[i].Team.Name)
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							@Html.TextBoxFor(m => m.Players[i].Team.Name, new { @class = "form-control", placeholder = "Team" })
+							@Html.HiddenFor(m => m.Players[i].TeamId)
+							@Html.ValidationMessageFor(m => m.Players[i].Team.Name)
+						</div>
+					</div>
+				</div>
+			</div>*@
+		
+	</div>
+
+	@Html.HiddenFor(m => m.Id)
+	@*@Html.AntiForgeryToken()*@
+	<button type="submit" class="btn btn-primary">Save</button>
+}
+@section scripts
+{
+	@Scripts.Render("~/bundles/jqueryval")
+	<script type="text/x-template" id="Player-Team-Template">
+		<div class='col-sm-3 Panel-Wrapper'>
+			<div class='panel panel-default'>
+				<div class='panel-heading'>
+					<div class='form-group'>
+						<input class='form-control' data-val='true' data-val-length='The field Name must be a string with a maximum length of 50.' data-val-length-max='50' id='Players_<%= value %>__Name' name='Players[<%= value %>].Name' type='text' , placeholder="Player">
+						<input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Players_<%= value %>__Id" name="Players[<%= value %>].Id" type="hidden" value=0>
+					</div>
+				</div>
+				<div class='panel-body'>
+					<div class='form-group'>
+						<input class='form-control' data-val='true' data-val-length='The field Name must be a string with a maximum length of 50.' data-val-length-max='50' id='Players_<%= value %>__Team_Name' name='Players[<%= value %>].Team.Name' type='text' , placeholder="Team">
+						<input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Players_<%= value %>__Team_Id" name="Players[<%= value %>].Team.Id" type="hidden" value=0>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
+	<script>$(document).ready(function () {
+		});
+
+		</script>
+}

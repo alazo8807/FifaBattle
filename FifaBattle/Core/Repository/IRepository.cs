@@ -5,10 +5,11 @@ namespace FifaBattle.Core.Repository
 {
 	public interface IRepository<T> where T : class
 	{
-		IEnumerable<T> Find(Expression<System.Func<T, bool>> criteria);
 		T Get(object key);
 
 		IEnumerable<T> GetAll();
+
+		IEnumerable<T> Find(Expression<System.Func<T, bool>> criteria);
 
 		void Add(T entity);
 
