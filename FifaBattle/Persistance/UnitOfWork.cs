@@ -14,10 +14,12 @@ namespace FifaBattle.Persistance
 		{
 			_context = new ApplicationDbContext();
 			Tournaments = new TournamentsRepository(_context);
+			Players = new PlayersRepository(_context);
 			TournamentTypes = new Repository<TournamentType>(_context);
 		}
 
 		public ITournamentsRepository Tournaments { get; set; }
+		public IPlayersRepository Players { get; set; }
 		public IRepository<TournamentType> TournamentTypes { get; set; }
 
 		public int Commit()

@@ -307,6 +307,8 @@
     <Compile Include="Core\Models\ApplicationUser.cs" />
     <Compile Include="Core\ViewModels\AccountViewModel.cs" />
     <Compile Include="Core\ViewModels\ManageViewModels.cs" />
+    <Compile Include="Core\Repository\IPlayersRepository.cs" />
+    <Compile Include="Persistance\Repositories\PlayersRepository.cs" />
     <Compile Include="Persistance\Repositories\Repository.cs" />
     <Compile Include="Persistance\Repositories\TournamentsRepository.cs" />
     <Compile Include="Persistance\UnitOfWork.cs" />

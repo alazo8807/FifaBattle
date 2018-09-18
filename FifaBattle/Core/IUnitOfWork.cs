@@ -10,6 +10,7 @@ namespace FifaBattle.Core
 		int Commit();
 
 		ITournamentsRepository Tournaments { get; set; }
+		IPlayersRepository Players { get; set; }
 		IRepository<TournamentType> TournamentTypes { get; set; }
 	}
 }
