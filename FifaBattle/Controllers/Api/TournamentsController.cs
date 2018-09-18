@@ -1,5 +1,6 @@
 ﻿using FifaBattle.Core;
 using FifaBattle.Models;
+using System.Linq;
 using System.Web.Http;
 
 namespace FifaBattle.Controllers.Api
@@ -29,6 +30,12 @@ namespace FifaBattle.Controllers.Api
 
 			if (tournamentInDb.CreatorId != userId)
 				return Unauthorized();
+
+			foreach (var player in tournamentInDb.Players.ToList())
+			{
+				_unitOfWork.Teams.Remove(player.Team);
+				_unitOfWork.Players.Remove(player);
+			}
 
 			_unitOfWork.Tournaments.Remove(tournamentInDb);
 			_unitOfWork.Commit();

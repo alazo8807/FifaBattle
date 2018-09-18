@@ -5,6 +5,8 @@ namespace FifaBattle.Core
 {
 	public interface IUnitOfWork
 	{
+		IRepository<Team> Teams { get; set; }
+
 		void Dispose();
 
 		int Commit();
