@@ -302,6 +302,10 @@
     <Compile Include="Migrations\201809160022270_addTeamToPlayer.Designer.cs">
       <DependentUpon>201809160022270_addTeamToPlayer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809181321131_AddIsFinishedAndRoundNbrColumnsToMatchTable.cs" />
+    <Compile Include="Migrations\201809181321131_AddIsFinishedAndRoundNbrColumnsToMatchTable.Designer.cs">
+      <DependentUpon>201809181321131_AddIsFinishedAndRoundNbrColumnsToMatchTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Core\Models\ApplicationUser.cs" />
@@ -444,6 +448,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809160022270_addTeamToPlayer.resx">
       <DependentUpon>201809160022270_addTeamToPlayer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809181321131_AddIsFinishedAndRoundNbrColumnsToMatchTable.resx">
+      <DependentUpon>201809181321131_AddIsFinishedAndRoundNbrColumnsToMatchTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

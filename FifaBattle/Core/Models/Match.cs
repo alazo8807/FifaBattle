@@ -28,5 +28,9 @@ namespace FifaBattle.Core.Models
 		public Team AwayTeam { get; set; }
 
 		public int AwayTeamGoals { get; set; }
+
+		public bool IsFinished { get; set; }
+
+		public short RoundNbr { get; set; }
 	}
 }
