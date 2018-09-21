@@ -31,6 +31,16 @@ namespace FifaBattle.Controllers.Api
 			if (tournamentInDb.CreatorId != userId)
 				return Unauthorized();
 
+			var matchesInDb = _unitOfWork.Matches.Find(m => m.TournamentId == id);
+
+			if (matchesInDb != null)
+			{
+				foreach (var match in matchesInDb)
+				{
+					_unitOfWork.Matches.Remove(match);
+				}
+			}
+
 			foreach (var player in tournamentInDb.Players.ToList())
 			{
 				_unitOfWork.Teams.Remove(player.Team);

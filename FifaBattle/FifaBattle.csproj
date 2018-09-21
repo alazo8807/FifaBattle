@@ -320,7 +320,7 @@
     <Compile Include="Persistance\Repositories\TournamentsRepository.cs" />
     <Compile Include="Persistance\UnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\MatchesGenerator.cs" />
+    <Compile Include="Core\Helpers\MatchesGenerator.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Core\ViewModels\TournamentViewModel.cs" />
   </ItemGroup>
@@ -390,6 +390,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

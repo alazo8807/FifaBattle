@@ -52,7 +52,7 @@ namespace FifaBattle.Controllers.Api
 			if (tournamentInDb.CreatorId != userId)
 				return Unauthorized();
 
-			if (dto.TeamType == "Home")
+			if (dto.TeamType.ToUpper() == "HOME")
 				matchInDb.HomeTeamGoals = dto.Goals;
 			else
 				matchInDb.AwayTeamGoals = dto.Goals;

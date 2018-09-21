@@ -5,112 +5,75 @@
 <h2>@Model.Title</h2>
 
 
+@{
+	var prevRoundNbr = 0;
+}
 
-	@foreach (var match in Model.Matches)
-	{
-		<div class="container">
-			<div class="row">
-				<div class="col-xs-6">
-					<table class="table table-hover">
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-6">
+			<table class="table table-hover">
+				@foreach (var match in Model.Matches.OrderBy(m => m.RoundNbr))
+				{
+					if (prevRoundNbr != match.RoundNbr)
+					{
+						prevRoundNbr = match.RoundNbr;
 						<thead>
-							<td>Round @match.RoundNbr</td>
+							<td><strong>Round @match.RoundNbr</strong></td>
 						</thead>
-						<tbody>
-							<tr>
-								<td>@match.HomeTeam.Name</td>
-								<td class="score-column text-center">
-									<span contenteditable="true" class="score" id="home-@match.Id-@match.HomeTeamId" name="home-@match.Id" data-tournament-id="@match.TournamentId"></span>
-									-
-									<span contenteditable="true" class="score" id="away-@match.Id-@match.AwayTeamId" name="@match.AwayTeamGoals" data-tournament-id="@match.TournamentId"></span>
-								</td>
-								<td class="text-right">@match.AwayTeam.Name</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+					}
+					<tbody>
+						<tr>
+							<td>@match.HomeTeam.Name</td>
+							<td class="score-column text-center">
+								<span contenteditable="true" class="score" id="home-@match.Id-@match.HomeTeamId" name="home-@match.Id" data-tournament-id="@match.TournamentId">@match.HomeTeamGoals</span>
+								-
+								<span contenteditable="true" class="score" id="away-@match.Id-@match.AwayTeamId" name="away-@match.AwayTeamGoals" data-tournament-id="@match.TournamentId">@match.AwayTeamGoals</span>
+							</td>
+							<td class="text-right">@match.AwayTeam.Name</td>
+						</tr>
+					</tbody>
+				}
+			</table>
 		</div>
-	}
-	@*@Html.AntiForgeryToken()*@
+	</div>
+</div>
+			@*@Html.AntiForgeryToken() *@
 
 
 @section scripts
 {
 
-	@Scripts.Render("~/bundles/jqueryval")
-	
-	<script>
-		$(document).ready(function () {
-			$(".score").keypress((e) => {
-				var isValid = /[0-9]/.test(e.key);
-				console.log(e);
-				if (isValid) {
-					var span = e.target;
-					var id = span.id;
-					var tournamentId = $(span).attr("data-tournament-id");
-					var matchId = id.substring(id.indexOf('-') + 1, id.lastIndexOf('-'));
-					var teamType = id.substr(0, 4);
-					var goals = e.target.innerHTML + e.key;
+						@Scripts.Render("~/bundles/jqueryval")
 
-					$.ajax({
-						url: "http://localhost:54404/api/matches/" + matchId + "/" + tournamentId,
-						type: 'PUT',
-						data: { Id: matchId, TeamType: teamType, Goals: goals },
-						dataType: 'application/json',
-						success: function (result) {
-							alert("success?");
-						},
-						fail: function (result) {
-							alert("Something failed");
+			<script>
+				$(document).ready(function () {
+					$(".score").keypress((e) => {
+						var isValid = /[0-9]/.test(e.key);
+						console.log(e);
+						if (isValid) {
+							var span = e.target;
+							var id = span.id;
+							var tournamentId = $(span).attr("data-tournament-id");
+							var matchId = id.substring(id.indexOf('-') + 1, id.lastIndexOf('-'));
+							var teamType = id.substr(0, 4);
+							var goals = e.target.innerHTML + e.key;
+
+							$.ajax({
+								url: "http://localhost:54404/api/matches/" + matchId + "/" + tournamentId,
+								type: 'PUT',
+								data: { Id: matchId, TeamType: teamType, Goals: goals },
+								dataType: 'application/json',
+								success: function (result) {
+									alert("success?");
+								},
+								fail: function (result) {
+									alert("Something failed");
+								}
+							})
 						}
-					})
-					//.done(function () {
-					//	alert("Posted");
-					//})
-					//.fail(function () {
-					//	var dialog = bootbox.dialog({
-					//		title: 'Error',
-					//		message: "<p>Sorry but something went wrong. We were unable to update the score</p>",
-					//		buttons: {
-					//			ok: {
-					//				label: "Ok",
-					//				className: 'btn-warning'
-					//			}
-					//		}
-					//	});
-					//});
-				}
-			});
-		});
-
-		//function  scoreObserver()  {		//	// Select the node that will be observed for mutations		//	var  targetNode  =  $(".score");		//	for  (var  i  =  0;  i  <  targetNode.length;  i++)  {		//		// Options for the observer (which mutations to observe)		//		var  config  =  {  childList:  true,  characterData: true,  subtree:  true  };		//		// Callback function to execute when mutations are observed		//		var  callback  =  function  (mutationsList,  observer)  {		//			for  (var  mutation  of  mutationsList)  {		//				//console.log(mutation.target.data);
-		//				//console.log($("#home-3-34").html())		//				if (mutation.type == 'characterData') {		//					console.log(mutation.target.parentElement);		//				}		//				//else if (mutation.type == 'childList') {		//				//	console.log(mutation.addedNodes);		//				//}		//			}		//		};		//		// Create an observer instance linked to the callback function		//		var  observer  =  new  MutationObserver(callback);		//		// Start observing the target node for configured mutations		//		observer.observe(targetNode[i],  config);		//	}		//}
-
-
-
-		//function (result) {
-		//	if (result) {
-		//		$.ajax({
-		//			url: "api/matches/" + button.attr("data-tournament-id"),
-		//			method: "DELETE"
-		//		})
-		//			.done(function () {
-		//				button.parents(".tournament-panel-wrapper").fadeOut(/*() => remove()*/);
-		//			})
-		//			.fail(function () {
-		//				var dialog = bootbox.dialog({
-		//					title: 'Error',
-		//					message: "<p>Sorry but something went wrong. We were unable to delete this Tournament.</p>",
-		//					buttons: {
-		//						ok: {
-		//							label: "Ok",
-		//							className: 'btn-warning'
-		//						}
-		//					}
-		//				});
-		//			});
-		//	}
-
-
-	</script>
+					});
+				});
+			</script>
 }

@@ -1,4 +1,5 @@
 ﻿using FifaBattle.Core;
+using FifaBattle.Core.Helpers;
 using FifaBattle.Core.Models;
 using FifaBattle.Core.ViewModels;
 using FifaBattle.Models;
@@ -81,8 +82,8 @@ namespace FifaBattle.Controllers
 
 			_unitOfWork.Commit();
 
-			//MatchesGenerator matchesGenerator = new MatchesGenerator(tournament.Id);
-			//matchesGenerator.Generate();
+			MatchesGenerator matchesGenerator = new MatchesGenerator(_unitOfWork);
+			matchesGenerator.GenerateMatches(tournament.Id);
 
 			return RedirectToAction("Index");
 		}
