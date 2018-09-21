@@ -21,6 +21,11 @@ namespace FifaBattle.Persistance.Repositories
 			return _context.Set<T>().Find(key);
 		}
 
+		public T Get(object[] key)
+		{
+			return _context.Set<T>().Find(key);
+		}
+
 		public IEnumerable<T> GetAll()
 		{
 			return _context.Set<T>().ToList();

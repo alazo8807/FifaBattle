@@ -7,6 +7,8 @@ namespace FifaBattle.Core.Repository
 	{
 		T Get(object key);
 
+		T Get(object[] key);
+
 		IEnumerable<T> GetAll();
 
 		IEnumerable<T> Find(Expression<System.Func<T, bool>> criteria);

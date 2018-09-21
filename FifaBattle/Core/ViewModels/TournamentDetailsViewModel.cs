@@ -30,7 +30,7 @@ namespace FifaBattle.Core.ViewModels
 		{
 			get
 			{
-				return Id == null ? "Create" : "Update";
+				return Id == null ? "Details" : "Update";
 			}
 		}
 	}

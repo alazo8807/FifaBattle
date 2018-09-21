@@ -222,11 +222,13 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\MatchesController.cs" />
     <Compile Include="Controllers\Api\PlayersController.cs" />
     <Compile Include="Controllers\Api\TournamentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TournamentsController.cs" />
+    <Compile Include="Core\Dtos\MatchDto.cs" />
     <Compile Include="Core\IUnitOfWork.cs" />
     <Compile Include="Core\Models\Match.cs" />
     <Compile Include="Core\Models\Player.cs" />

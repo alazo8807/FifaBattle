@@ -3,77 +3,114 @@
 	ViewBag.Title = Model.Title;
 }
 <h2>@Model.Title</h2>
-@using (Html.BeginForm(Model.Action, "Tournaments"))
-{
-	@Html.ValidationSummary(true, "Please fix the following errors.")
-
-	<div class="form-group">
-		@Html.LabelFor(m => m.Name)
-		@Html.TextBoxFor(m => m.Name, new { @class = "form-control", autofocus = "autofocus" })
-		@Html.ValidationMessageFor(m => m.Name)
-	</div>
-	<div class="form-group">
-		@Html.LabelFor(m => m.TournamentTypeId)
-		@Html.DropDownListFor(m => m.TournamentTypeId, new SelectList(Model.TournamentTypes, "Id", "Name"), "Select Tournament Type", new { @class = "form-control" })
-		@Html.ValidationMessageFor(m => m.TournamentTypeId)
-	</div>
-
-	<div class="row Player-Teams-Container">
-		@foreach (var match in Model.Matches)
-		{
-			<p>Match @match.HomeTeamId vs @match.AwayTeamId</p>
-		}
 
 
-					
-			@*<div class="col-sm-3 Panel-Wrapper">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<div class="form-group">
-							@Html.TextBoxFor(m => m.Players[i].Name, new { @class = "form-control", placeholder = "Player" })
-							@Html.HiddenFor(m => m.Players[i].Id)
-							@Html.ValidationMessageFor(m => m.Players[i].Team.Name)
-						</div>
-					</div>
-					<div class="panel-body">
-						<div class="form-group">
-							@Html.TextBoxFor(m => m.Players[i].Team.Name, new { @class = "form-control", placeholder = "Team" })
-							@Html.HiddenFor(m => m.Players[i].TeamId)
-							@Html.ValidationMessageFor(m => m.Players[i].Team.Name)
-						</div>
-					</div>
-				</div>
-			</div>*@
-		
-	</div>
 
-	@Html.HiddenFor(m => m.Id)
-	@*@Html.AntiForgeryToken()*@
-	<button type="submit" class="btn btn-primary">Save</button>
-}
-@section scripts
-{
-	@Scripts.Render("~/bundles/jqueryval")
-	<script type="text/x-template" id="Player-Team-Template">
-		<div class='col-sm-3 Panel-Wrapper'>
-			<div class='panel panel-default'>
-				<div class='panel-heading'>
-					<div class='form-group'>
-						<input class='form-control' data-val='true' data-val-length='The field Name must be a string with a maximum length of 50.' data-val-length-max='50' id='Players_<%= value %>__Name' name='Players[<%= value %>].Name' type='text' , placeholder="Player">
-						<input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Players_<%= value %>__Id" name="Players[<%= value %>].Id" type="hidden" value=0>
-					</div>
-				</div>
-				<div class='panel-body'>
-					<div class='form-group'>
-						<input class='form-control' data-val='true' data-val-length='The field Name must be a string with a maximum length of 50.' data-val-length-max='50' id='Players_<%= value %>__Team_Name' name='Players[<%= value %>].Team.Name' type='text' , placeholder="Team">
-						<input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Players_<%= value %>__Team_Id" name="Players[<%= value %>].Team.Id" type="hidden" value=0>
-					</div>
+	@foreach (var match in Model.Matches)
+	{
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-6">
+					<table class="table table-hover">
+						<thead>
+							<td>Round @match.RoundNbr</td>
+						</thead>
+						<tbody>
+							<tr>
+								<td>@match.HomeTeam.Name</td>
+								<td class="score-column text-center">
+									<span contenteditable="true" class="score" id="home-@match.Id-@match.HomeTeamId" name="home-@match.Id" data-tournament-id="@match.TournamentId"></span>
+									-
+									<span contenteditable="true" class="score" id="away-@match.Id-@match.AwayTeamId" name="@match.AwayTeamGoals" data-tournament-id="@match.TournamentId"></span>
+								</td>
+								<td class="text-right">@match.AwayTeam.Name</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
-	</script>
-	<script>$(document).ready(function () {
+	}
+	@*@Html.AntiForgeryToken()*@
+
+
+@section scripts
+{
+
+	@Scripts.Render("~/bundles/jqueryval")
+	
+	<script>
+		$(document).ready(function () {
+			$(".score").keypress((e) => {
+				var isValid = /[0-9]/.test(e.key);
+				console.log(e);
+				if (isValid) {
+					var span = e.target;
+					var id = span.id;
+					var tournamentId = $(span).attr("data-tournament-id");
+					var matchId = id.substring(id.indexOf('-') + 1, id.lastIndexOf('-'));
+					var teamType = id.substr(0, 4);
+					var goals = e.target.innerHTML + e.key;
+
+					$.ajax({
+						url: "http://localhost:54404/api/matches/" + matchId + "/" + tournamentId,
+						type: 'PUT',
+						data: { Id: matchId, TeamType: teamType, Goals: goals },
+						dataType: 'application/json',
+						success: function (result) {
+							alert("success?");
+						},
+						fail: function (result) {
+							alert("Something failed");
+						}
+					})
+					//.done(function () {
+					//	alert("Posted");
+					//})
+					//.fail(function () {
+					//	var dialog = bootbox.dialog({
+					//		title: 'Error',
+					//		message: "<p>Sorry but something went wrong. We were unable to update the score</p>",
+					//		buttons: {
+					//			ok: {
+					//				label: "Ok",
+					//				className: 'btn-warning'
+					//			}
+					//		}
+					//	});
+					//});
+				}
+			});
 		});
 
-		</script>
+		//function  scoreObserver()  {		//	// Select the node that will be observed for mutations		//	var  targetNode  =  $(".score");		//	for  (var  i  =  0;  i  <  targetNode.length;  i++)  {		//		// Options for the observer (which mutations to observe)		//		var  config  =  {  childList:  true,  characterData: true,  subtree:  true  };		//		// Callback function to execute when mutations are observed		//		var  callback  =  function  (mutationsList,  observer)  {		//			for  (var  mutation  of  mutationsList)  {		//				//console.log(mutation.target.data);
+		//				//console.log($("#home-3-34").html())		//				if (mutation.type == 'characterData') {		//					console.log(mutation.target.parentElement);		//				}		//				//else if (mutation.type == 'childList') {		//				//	console.log(mutation.addedNodes);		//				//}		//			}		//		};		//		// Create an observer instance linked to the callback function		//		var  observer  =  new  MutationObserver(callback);		//		// Start observing the target node for configured mutations		//		observer.observe(targetNode[i],  config);		//	}		//}
+
+
+
+		//function (result) {
+		//	if (result) {
+		//		$.ajax({
+		//			url: "api/matches/" + button.attr("data-tournament-id"),
+		//			method: "DELETE"
+		//		})
+		//			.done(function () {
+		//				button.parents(".tournament-panel-wrapper").fadeOut(/*() => remove()*/);
+		//			})
+		//			.fail(function () {
+		//				var dialog = bootbox.dialog({
+		//					title: 'Error',
+		//					message: "<p>Sorry but something went wrong. We were unable to delete this Tournament.</p>",
+		//					buttons: {
+		//						ok: {
+		//							label: "Ok",
+		//							className: 'btn-warning'
+		//						}
+		//					}
+		//				});
+		//			});
+		//	}
+
+
+	</script>
 }

@@ -43,6 +43,19 @@ h3.panel-title {
 	outline: none;
 }
 
+/*----------------------*/
+/*Match Result Container*/
+/*----------------------*/
+.match-result-container {
+	border: 1px solid black;
+	display: flex;
+	justify-content: space-between;
+}
+
+table td {
+width: 30%;
+}
+
 /*---------------*/
 /*Input nbr*/
 /*---------------*/
