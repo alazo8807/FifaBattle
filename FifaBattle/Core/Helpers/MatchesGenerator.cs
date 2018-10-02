@@ -40,8 +40,6 @@ namespace FifaBattle.Core.Helpers
 
 		private void GenerateLeague(bool twoRoundsLeague = false)
 		{
-			int roundNo = 1;
-			int prevRoundNo = 1;
 			var playersCount = _tournament.Players.Count;
 
 			if (playersCount == 1)
@@ -49,33 +47,17 @@ namespace FifaBattle.Core.Helpers
 
 			if (playersCount == 2)
 			{
-				AddMatch(_tournament.Players[0].TeamId, _tournament.Players[1].TeamId, roundNo);
+				AddMatch(_tournament.Players[0].TeamId, _tournament.Players[1].TeamId, 1);
 				return;
 			}
 
-			for (int i = 0; i < _tournament.Players.Count; i++)
+			int[,] matchGuideArray = createGuideArray(playersCount);
+
+			for (int i = 0; i < playersCount; i++)
 			{
-				if (i > 0)
-				{
-					roundNo = prevRoundNo + 2;
-
-					if ((roundNo - playersCount) > 0)
-					{
-						roundNo -= playersCount;
-						prevRoundNo = roundNo;
-					}
-				}
-
 				for (int j = i + 1; j < _tournament.Players.Count; j++)
 				{
-					AddMatch(_tournament.Players[i].TeamId, _tournament.Players[j].TeamId, 1);
-
-					roundNo += 1;
-
-					if (roundNo > playersCount)
-					{
-						roundNo = 1;
-					}
+					AddMatch(_tournament.Players[i].TeamId, _tournament.Players[j].TeamId, matchGuideArray[i, j]);
 				}
 			}
 		}
@@ -93,6 +75,31 @@ namespace FifaBattle.Core.Helpers
 
 			_unitOfWork.Matches.Add(match);
 			_unitOfWork.Commit();
+		}
+
+		private int[,] createGuideArray(int size)
+		{
+			int[,] GuideArray = new int[size, size];
+
+			var matchIndex = size;
+
+			for (int i = 0; i < size; i++)
+			{
+				if (i > 0) matchIndex = GuideArray[i - 1, 0] + 1;
+
+				if (matchIndex > size) matchIndex = 1;
+
+				for (int j = 0; j < size; j++)
+				{
+					if (matchIndex > size)
+						matchIndex = 1;
+
+					GuideArray[i, j] = matchIndex;
+					matchIndex++;
+				}
+			}
+
+			return GuideArray;
 		}
 	}
 }
