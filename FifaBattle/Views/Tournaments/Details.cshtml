@@ -45,35 +45,73 @@
 @section scripts
 {
 
-						@Scripts.Render("~/bundles/jqueryval")
+			@Scripts.Render("~/bundles/jqueryval")
 
 			<script>
 				$(document).ready(function () {
-					$(".score").keypress((e) => {
-						var isValid = /[0-9]/.test(e.key);
-						console.log(e);
-						if (isValid) {
-							var span = e.target;
-							var id = span.id;
-							var tournamentId = $(span).attr("data-tournament-id");
-							var matchId = id.substring(id.indexOf('-') + 1, id.lastIndexOf('-'));
-							var teamType = id.substr(0, 4);
-							var goals = e.target.innerHTML + e.key;
+					$(".score").keyup((e) => {
+						var score = e.target.innerHTML;
 
-							$.ajax({
-								url: "http://localhost:54404/api/matches/" + matchId + "/" + tournamentId,
-								type: 'PUT',
-								data: { Id: matchId, TeamType: teamType, Goals: goals },
-								dataType: 'application/json',
-								success: function (result) {
-									alert("success?");
-								},
-								fail: function (result) {
-									alert("Something failed");
-								}
-							})
+						switch (e.keyCode) {
+							case 8 || 46:  // Backspace
+								updateScore(e, Number(score));
+							case 9:  // Tab
+								break;
+							case 13: // Enter
+								break;
+
+							default:
+								var isValid = /[0-9]/.test(e.key);
+
+								if (isValid) {
+									var goals = e.target.innerHTML;
+									updateScore(e, goals);
+								};
+
+								break;
 						}
 					});
+
+					$(".score").focusout((e) => {
+						//remove zeros in front of the value
+						var score = parseInt(e.target.innerHTML, 10); 
+						e.target.innerHTML = '' + score;
+					})
+
+					$(".score").keydown((e) => {
+						var isValid = /[0-9]/.test(e.key);
+
+						if (!isValid && e.keyCode !== 8 && e.keyCode !== 46 && e.keyCode !== 9) {
+							e.preventDefault();
+							return;
+						};
+
+						if (e.keyCode === 8 || e.keyCode === 46) {
+							if (e.target.innerHTML.length === 1)
+								e.target.innerHTML = 0;
+						}
+					});
+
+					function updateScore(e, goals) {
+						var span = e.target;
+						var id = span.id;
+						var tournamentId = $(span).attr("data-tournament-id");
+						var matchId = id.substring(id.indexOf('-') + 1, id.lastIndexOf('-'));
+						var teamType = id.substr(0, 4);
+
+						$.ajax({
+							url: "http://localhost:54404/api/matches/" + matchId + "/" + tournamentId,
+							type: 'PUT',
+							data: { Id: matchId, TeamType: teamType, Goals: goals },
+							dataType: 'application/json',
+							success: function (result) {
+								alert("success?");
+							},
+							fail: function (result) {
+								alert("Something failed");
+							}
+						});
+					};
 				});
 			</script>
 }
